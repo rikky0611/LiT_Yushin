@@ -104,8 +104,6 @@ class ViewController: UIViewController,AVAudioRecorderDelegate {
 
         audioRecorder.stop()
         
-        
-        
         audioRecorder = nil
         
         if success {
