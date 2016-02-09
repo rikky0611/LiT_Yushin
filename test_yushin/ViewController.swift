@@ -12,13 +12,18 @@ import MediaPlayer
 
 
 class ViewController: UIViewController,AVAudioRecorderDelegate {
+    //appDelegate宣言
+    let appDelegate:AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
     //audio系宣言
     var audioRecorder: AVAudioRecorder!
     var audioPlayer: AVAudioPlayer!
     var recordingSession: AVAudioSession!
+    
     //ボタン宣言
     var recordButton: UIButton!
     var playButton: UIButton!
+    var toResultButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,16 +110,21 @@ class ViewController: UIViewController,AVAudioRecorderDelegate {
         //平均音量取得
         audioRecorder.updateMeters()
         NSLog("録音音量は%f", audioRecorder.averagePowerForChannel(0))   //必ず0にする！！
+        appDelegate.volume = audioRecorder.averagePowerForChannel(0)
         //録音ストップ
         audioRecorder.stop()
         audioRecorder = nil
         
         if success {
             recordButton.setTitle("Tap to Re-record", forState: .Normal)
+            createButtons()
         } else {
             recordButton.setTitle("Tap to Record", forState: .Normal)   // 録音失敗時
         }
         
+            }
+    
+    func createButtons(){
         //再生ボタン生成
         playButton = UIButton()
         playButton.frame = CGRectMake(self.view.bounds.width/4, self.view.bounds.height/4*3, self.view.bounds.width/2, 80)
@@ -124,6 +134,14 @@ class ViewController: UIViewController,AVAudioRecorderDelegate {
         playButton.addTarget(self, action: "playTapped", forControlEvents: .TouchUpInside)
         view.addSubview(playButton)
         
+        //結果表示ボタン生成
+        toResultButton = UIButton()
+        toResultButton.frame = CGRectMake(self.view.bounds.width/4, self.view.bounds.height/2, self.view.bounds.width/2, 80)
+        toResultButton.backgroundColor = UIColor.greenColor()
+        toResultButton.setTitle("Tap to Result", forState: .Normal)
+        toResultButton.titleLabel?.font = UIFont.systemFontOfSize(20)
+        toResultButton.addTarget(self, action: "resultTapped", forControlEvents: .TouchUpInside)
+        view.addSubview(toResultButton)
     }
     
     //再生ボタンタップ時
@@ -144,6 +162,13 @@ class ViewController: UIViewController,AVAudioRecorderDelegate {
         if !flag {
             finishRecording(false)
         }
+    }
+    
+    
+    //結果表示ボタンタップ時
+    func resultTapped(){
+        let targetViewController = self.storyboard!.instantiateViewControllerWithIdentifier( "result" )
+        self.presentViewController( targetViewController, animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {

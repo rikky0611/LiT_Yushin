@@ -8,7 +8,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="test_yushin" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="main" id="BYZ-38-t0r" customClass="ViewController" customModule="test_yushin" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -22,7 +22,26 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="305" y="294"/>
+            <point key="canvasLocation" x="-195" y="70"/>
+        </scene>
+        <!--Result View Controller-->
+        <scene sceneID="aek-dV-BmN">
+            <objects>
+                <viewController storyboardIdentifier="result" id="81L-L3-tkU" customClass="ResultViewController" customModule="test_yushin" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="b57-Ad-MYi"/>
+                        <viewControllerLayoutGuide type="bottom" id="v8a-5b-6to"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="2gF-3T-T5x">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VNm-BE-tJQ" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="233" y="70"/>
         </scene>
     </scenes>
 </document>
