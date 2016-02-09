@@ -12,12 +12,13 @@ import MediaPlayer
 
 
 class ViewController: UIViewController,AVAudioRecorderDelegate {
+    //audio系宣言
     var audioRecorder: AVAudioRecorder!
     var audioPlayer: AVAudioPlayer!
+    var recordingSession: AVAudioSession!
+    //ボタン宣言
     var recordButton: UIButton!
     var playButton: UIButton!
-    var recordingSession: AVAudioSession!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,16 +34,17 @@ class ViewController: UIViewController,AVAudioRecorderDelegate {
                     if allowed {
                         self.loadRecordingUI()
                     } else {
-                        // failed to record!
+                        // 録音準備失敗
                     }
                 }
             }
         } catch {
-            // failed to record!
+            // 録音準備失敗
         }
         
     }
     
+    //録音ボタン生成
     func loadRecordingUI() {
         recordButton = UIButton()
         recordButton.frame = CGRectMake(self.view.bounds.width/4, self.view.bounds.height/4, self.view.bounds.width/2, 80)
@@ -55,20 +57,22 @@ class ViewController: UIViewController,AVAudioRecorderDelegate {
         print ("success")
     }
     
+    //録音ボタンタッチ時
     func recordTapped() {
         if audioRecorder == nil {
             startRecording()
         } else {
-            finishRecording(success: true)
+            finishRecording(true)
         }
     }
 
     
-    //レコード開始
+    //録音開始
     func startRecording() {
+        //保存情報
         let audioFilename = getDocumentsDirectory().stringByAppendingPathComponent("recording.m4a")
         let audioURL = NSURL(fileURLWithPath: audioFilename)
-        
+        //各種設定(気にしない)
         let settings = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 12000.0,
@@ -85,7 +89,8 @@ class ViewController: UIViewController,AVAudioRecorderDelegate {
             
             recordButton.setTitle("Tap to Stop", forState: .Normal)
         } catch {
-            finishRecording(success: false)
+            //録音失敗
+            finishRecording(false)
         }
     }
     
@@ -96,23 +101,21 @@ class ViewController: UIViewController,AVAudioRecorderDelegate {
     }
 
     //レコード終了
-    func finishRecording(success success: Bool) {
-        
-       
-        //audioRecorder.updateMeters()
-        NSLog("recorder音量は%f", audioRecorder.averagePowerForChannel(0))
-
+    func finishRecording(success: Bool) {
+        //平均音量取得
+        audioRecorder.updateMeters()
+        NSLog("録音音量は%f", audioRecorder.averagePowerForChannel(0))   //必ず0にする！！
+        //録音ストップ
         audioRecorder.stop()
-        
         audioRecorder = nil
         
         if success {
             recordButton.setTitle("Tap to Re-record", forState: .Normal)
         } else {
-            recordButton.setTitle("Tap to Record", forState: .Normal)
-            // recording failed
+            recordButton.setTitle("Tap to Record", forState: .Normal)   // 録音失敗時
         }
         
+        //再生ボタン生成
         playButton = UIButton()
         playButton.frame = CGRectMake(self.view.bounds.width/4, self.view.bounds.height/4*3, self.view.bounds.width/2, 80)
         playButton.backgroundColor = UIColor.redColor()
@@ -121,33 +124,25 @@ class ViewController: UIViewController,AVAudioRecorderDelegate {
         playButton.addTarget(self, action: "playTapped", forControlEvents: .TouchUpInside)
         view.addSubview(playButton)
         
-       
     }
     
+    //再生ボタンタップ時
     func playTapped(){
+        //再生情報
         let audioFilename = getDocumentsDirectory().stringByAppendingPathComponent("recording.m4a")
         let audioURL = NSURL(fileURLWithPath: audioFilename)
         do {
             audioPlayer = try AVAudioPlayer(contentsOfURL: audioURL)
         } catch {
-            //fail to play!
+            //再生失敗
         }
         audioPlayer.play()
-        
-        /*これじゃうまくいかない
-        NSLog("音量は%f", audioPlayer.volume)
-        */
-        
-        audioPlayer.updateMeters()
-        NSLog("player音量は%f", audioPlayer.averagePowerForChannel(1))
-       
-        
     }
     
     
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool) {
         if !flag {
-            finishRecording(success: false)
+            finishRecording(false)
         }
     }
 
